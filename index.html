@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <title>ஜாதகம் தசா மற்றும் ராசி</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 30px;
+      background-color: #f0f4f8;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    label, input, select, button {
+      font-size: 1rem;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select {
+      padding: 5px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 8px 15px;
+      cursor: pointer;
+    }
+    .dasha {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .sub {
+      margin-left: 20px;
+    }
+    .house {
+      margin-left: 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌟 ஜாதக தசா மற்றும் ராசி</h1>
+
+  <label for="dob">பிறந்த தேதி:</label>
+  <input type="date" id="dob" />
+
+  <label for="gender">பாலினம்:</label>
+  <select id="gender">
+    <option value="">பாலினத்தை தேர்வு செய்யவும்</option>
+    <option value="male">ஆண்</option>
+    <option value="female">பெண்</option>
+  </select>
+
+  <button onclick="showDasha()">தசா காண்பி</button>
+
+  <div id="result" style="margin-top: 30px;"></div>
+
+  <script>
+    function addYearsAndMonths(date, years, months) {
+      const newDate = new Date(date);
+      newDate.setFullYear(newDate.getFullYear() + years);
+      newDate.setMonth(newDate.getMonth() + months);
+      return newDate;
+    }
+
+    function addYearsFractionToDateAccurate(date, yearsFraction) {
+      const totalMonths = Math.round(yearsFraction * 12);
+      const years = Math.floor(totalMonths / 12);
+      const months = totalMonths % 12;
+      return addYearsAndMonths(date, years, months);
+    }
+
+    function calculateAgeYM(startDate, endDate) {
+      let years = endDate.getFullYear() - startDate.getFullYear();
+      let months = endDate.getMonth() - startDate.getMonth();
+      if (endDate.getDate() < startDate.getDate()) months--;
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+      return { years, months };
+    }
+
+    function showDasha() {
+      const dobInput = document.getElementById("dob").value;
+      const gender = document.getElementById("gender").value;
+      if (!dobInput || !gender) {
+        alert("தயவுசெய்து பிறந்த தேதி மற்றும் பாலினம் தேர்வு செய்யவும்.");
+        return;
+      }
+
+      const dob = new Date(dobInput);
+      const now = new Date();
+      const age = calculateAgeYM(dob, now);
+      const totalYears = age.years + age.months / 12;
+
+      const dashas = [
+        { name: "கேது", years: 7 },
+        { name: "சுக்கிரன்", years: 20 },
+        { name: "சூரியன்", years: 6 },
+        { name: "சந்திரன்", years: 10 },
+        { name: "செவ்வாய்", years: 7 },
+        { name: "ராகு", years: 18 },
+        { name: "குரு", years: 16 },
+        { name: "சனி", years: 19 },
+        { name: "புதன்", years: 17 }
+      ];
+
+      const rasis = [
+        "மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்",
+        "சிம்மம்", "கன்னி", "துலாம்", "விருச்சிகம்",
+        "தனுசு", "மகரம்", "கும்பம்", "மீனம்"
+      ];
+
+      // Step 1: Generate 36 parts
+      let allParts = [];
+      for (const dasha of dashas) {
+        for (let i = 0; i < 4; i++) {
+          allParts.push({ dasha: dasha.name, part: i + 1, years: dasha.years / 4 });
+        }
+      }
+
+      // Female logic: Start from செவ்வாய் 3rd part to 2nd part
+      if (gender === 'female') {
+        const startIndex = allParts.findIndex(p => p.dasha === "செவ்வாய்" && p.part === 3);
+        const rotated = allParts.slice(startIndex).concat(allParts.slice(0, startIndex));
+        let filtered = [];
+        for (let i = 0; i < rotated.length; i++) {
+          filtered.push(rotated[i]);
+          if (i !== 0 && rotated[i].dasha === "செவ்வாய்" && rotated[i].part === 2) break;
+        }
+        allParts = filtered;
+      }
+
+      const rasiStartIndex = gender === "female" ? 6 : 0; // துலாம் or மேஷம்
+      let resultHTML = `<h2>தசா & ராசி — வயது: ${age.years} வருடம் ${age.months} மாதம்</h2>`;
+      let elapsedYears = 0;
+
+      for (let i = 0; i < allParts.length; i++) {
+        const part = allParts[i];
+        const partStart = addYearsFractionToDateAccurate(dob, elapsedYears);
+        const partEnd = addYearsFractionToDateAccurate(dob, elapsedYears + part.years);
+        const partAgeInYears = elapsedYears;
+        const partColor = (totalYears >= partAgeInYears && totalYears < partAgeInYears + part.years)
+          ? "green" : "gray";
+        const rasi = rasis[(rasiStartIndex + i) % 12];
+
+        const ageStart = calculateAgeYM(dob, partStart);
+        const ageEnd = calculateAgeYM(dob, partEnd);
+
+        resultHTML += `<div class="dasha" style="color: ${partColor};">
+          ${part.dasha} தசை பகுதி ${part.part}:
+          வயது ${ageStart.years}வ ${ageStart.months}ம – ${ageEnd.years}வ ${ageEnd.months}ம
+          ${partColor === "green" ? " ← இப்போது" : ""}
+        </div>`;
+
+        resultHTML += `<div class="house" style="color: ${partColor}; font-size:1.4rem;">
+          ⭐ ${rasi}
+        </div>`;
+
+        elapsedYears += part.years;
+      }
+
+      document.getElementById("result").innerHTML = resultHTML;
+    }
+  </script>
+
+</body>
+</html>
