@@ -1,170 +1,130 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
-  <meta charset="UTF-8" />
-  <title>ஜாதகம் தசா மற்றும் ராசி</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JP's Astro Research</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      padding: 30px;
-      background-color: #f0f4f8;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
     }
-    h1, h2 {
-      color: #333;
+
+    header {
+      background-color: #d4f4d2;
+      padding: 20px;
+      text-align: center;
     }
-    label, input, select, button {
-      font-size: 1rem;
-      margin-top: 10px;
-      display: block;
+
+    header h1 {
+      color: #2d702d;
+      margin: 0;
     }
-    input, select {
-      padding: 5px;
-      margin-bottom: 15px;
+
+    .container {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
     }
+
+    .bio, .link, .form-block {
+      background: #ffffff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .bio h2, .link h2, .form-block h2 {
+      margin-top: 0;
+      color: #2d702d;
+    }
+
+    input[type="text"], input[type="date"], input[type="time"], textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
     button {
-      padding: 8px 15px;
+      background-color: #2d702d;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
-    .dasha {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-    .sub {
-      margin-left: 20px;
-    }
-    .house {
-      margin-left: 40px;
-      font-size: 1.2rem;
-      font-weight: bold;
+
+    button:hover {
+      background-color: #205220;
     }
   </style>
 </head>
 <body>
 
-  <h1>🌟 ஜாதக தசா மற்றும் ராசி</h1>
+  <header>
+    <h1>JP's Astro Research</h1>
+  </header>
 
-  <label for="dob">பிறந்த தேதி:</label>
-  <input type="date" id="dob" />
+  <div class="container">
+    <div class="bio">
+      <h2>About JP</h2>
+      <p>I am Jayprakash, passionate about Tamil astrology, KP system, Dasha-Bhukti, and Nakshatra-level analysis. This is a personal research portal to guide based on deep Jyotish knowledge. ❤️</p>
+    </div>
 
-  <label for="gender">பாலினம்:</label>
-  <select id="gender">
-    <option value="">பாலினத்தை தேர்வு செய்யவும்</option>
-    <option value="male">ஆண்</option>
-    <option value="female">பெண்</option>
-  </select>
+    <div class="link">
+      <h2>My Links</h2>
+      <p>🔗 <a href="https://jayaprakash3195.github.io/my-website/" target="_blank">Click here to visit dasa based on age </a></p>
+    </div>
 
-  <button onclick="showDasha()">தசா காண்பி</button>
+    <div class="form-block">
+      <h2>Request Your Horoscope Reading</h2>
+      <form id="astroForm">
+        <label>Date of Birth:</label>
+        <input type="date" name="dob" required>
 
-  <div id="result" style="margin-top: 30px;"></div>
+        <label>Time of Birth:</label>
+        <input type="time" name="tob" required>
+
+        <label>Place of Birth:</label>
+        <input type="text" name="pob" placeholder="City, State" required>
+
+        <label>Your Question:</label>
+        <textarea name="question" rows="4" placeholder="Enter your question here..." required></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+      <p id="responseMsg" style="margin-top:15px; color: green;"></p>
+    </div>
+  </div>
 
   <script>
-    function addYearsAndMonths(date, years, months) {
-      const newDate = new Date(date);
-      newDate.setFullYear(newDate.getFullYear() + years);
-      newDate.setMonth(newDate.getMonth() + months);
-      return newDate;
-    }
+    document.getElementById("astroForm").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-    function addYearsFractionToDateAccurate(date, yearsFraction) {
-      const totalMonths = Math.round(yearsFraction * 12);
-      const years = Math.floor(totalMonths / 12);
-      const months = totalMonths % 12;
-      return addYearsAndMonths(date, years, months);
-    }
+      const form = event.target;
+      const formData = new FormData(form);
 
-    function calculateAgeYM(startDate, endDate) {
-      let years = endDate.getFullYear() - startDate.getFullYear();
-      let months = endDate.getMonth() - startDate.getMonth();
-      if (endDate.getDate() < startDate.getDate()) months--;
-      if (months < 0) {
-        years--;
-        months += 12;
-      }
-      return { years, months };
-    }
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzcOnscdiNCiuX-5xInzcCzwEWHiTOqMCrzFRnR7hVIcsUPjY4kMigv1avf_8yYd_uW/exec"; // Replace with your actual Web App URL
 
-    function showDasha() {
-      const dobInput = document.getElementById("dob").value;
-      const gender = document.getElementById("gender").value;
-      if (!dobInput || !gender) {
-        alert("தயவுசெய்து பிறந்த தேதி மற்றும் பாலினம் தேர்வு செய்யவும்.");
-        return;
-      }
-
-      const dob = new Date(dobInput);
-      const now = new Date();
-      const age = calculateAgeYM(dob, now);
-      const totalYears = age.years + age.months / 12;
-
-      const dashas = [
-        { name: "கேது", years: 7 },
-        { name: "சுக்கிரன்", years: 20 },
-        { name: "சூரியன்", years: 6 },
-        { name: "சந்திரன்", years: 10 },
-        { name: "செவ்வாய்", years: 7 },
-        { name: "ராகு", years: 18 },
-        { name: "குரு", years: 16 },
-        { name: "சனி", years: 19 },
-        { name: "புதன்", years: 17 }
-      ];
-
-      const rasis = [
-        "மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்",
-        "சிம்மம்", "கன்னி", "துலாம்", "விருச்சிகம்",
-        "தனுசு", "மகரம்", "கும்பம்", "மீனம்"
-      ];
-
-      // Step 1: Generate 36 parts
-      let allParts = [];
-      for (const dasha of dashas) {
-        for (let i = 0; i < 4; i++) {
-          allParts.push({ dasha: dasha.name, part: i + 1, years: dasha.years / 4 });
-        }
-      }
-
-      // Female logic: Start from செவ்வாய் 3rd part to 2nd part
-      if (gender === 'female') {
-        const startIndex = allParts.findIndex(p => p.dasha === "செவ்வாய்" && p.part === 3);
-        const rotated = allParts.slice(startIndex).concat(allParts.slice(0, startIndex));
-        let filtered = [];
-        for (let i = 0; i < rotated.length; i++) {
-          filtered.push(rotated[i]);
-          if (i !== 0 && rotated[i].dasha === "செவ்வாய்" && rotated[i].part === 2) break;
-        }
-        allParts = filtered;
-      }
-
-      const rasiStartIndex = gender === "female" ? 6 : 0; // துலாம் or மேஷம்
-      let resultHTML = `<h2>தசா & ராசி — வயது: ${age.years} வருடம் ${age.months} மாதம்</h2>`;
-      let elapsedYears = 0;
-
-      for (let i = 0; i < allParts.length; i++) {
-        const part = allParts[i];
-        const partStart = addYearsFractionToDateAccurate(dob, elapsedYears);
-        const partEnd = addYearsFractionToDateAccurate(dob, elapsedYears + part.years);
-        const partAgeInYears = elapsedYears;
-        const partColor = (totalYears >= partAgeInYears && totalYears < partAgeInYears + part.years)
-          ? "green" : "gray";
-        const rasi = rasis[(rasiStartIndex + i) % 12];
-
-        const ageStart = calculateAgeYM(dob, partStart);
-        const ageEnd = calculateAgeYM(dob, partEnd);
-
-        resultHTML += `<div class="dasha" style="color: ${partColor};">
-          ${part.dasha} தசை பகுதி ${part.part}:
-          வயது ${ageStart.years}வ ${ageStart.months}ம – ${ageEnd.years}வ ${ageEnd.months}ம
-          ${partColor === "green" ? " ← இப்போது" : ""}
-        </div>`;
-
-        resultHTML += `<div class="house" style="color: ${partColor}; font-size:1.4rem;">
-          ⭐ ${rasi}
-        </div>`;
-
-        elapsedYears += part.years;
-      }
-
-      document.getElementById("result").innerHTML = resultHTML;
-    }
+      fetch(scriptURL, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("responseMsg").textContent = data;
+        form.reset();
+      })
+      .catch(error => {
+        console.error("Error!", error.message);
+        document.getElementById("responseMsg").textContent = "❌ Something went wrong.";
+      });
+    });
   </script>
 
 </body>
