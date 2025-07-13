@@ -25,11 +25,11 @@
 
     .container {
       padding: 20px;
-      max-width: 600px;
+      max-width: 800px;
       margin: auto;
     }
 
-    .bio, .link, .form-block {
+    .bio, .form-block {
       background: #ffffff;
       padding: 15px;
       margin-bottom: 20px;
@@ -37,7 +37,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    .bio h2, .link h2, .form-block h2 {
+    .bio h2, .form-block h2 {
       margin-top: 0;
       color: #2d702d;
     }
@@ -62,10 +62,63 @@
     button:hover {
       background-color: #205220;
     }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .tab-button {
+      flex: 1 1 30%;
+      text-align: center;
+      background: #e0f2f1;
+      border: 1px solid #2d702d;
+      padding: 10px;
+      margin: 2px;
+      cursor: pointer;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #2d702d;
+    }
+
+    .tab-button.active {
+      background: #2d702d;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .tab-button {
+        flex: 1 1 100%;
+      }
+
+      iframe {
+        height: 500px;
+      }
+    }
   </style>
 </head>
 <body>
-
   <header>
     <h1>JP's Astro Research</h1>
   </header>
@@ -73,15 +126,25 @@
   <div class="container">
     <div class="bio">
       <h2>About JP</h2>
-      <p>I am Jayprakash, passionate about Tamil vedic astrology, KP system, Dasha-Bhukti, and Nakshatra-level analysis. This is a personal research portal to guide based on deep Jyotish knowledge. ❤️           feel free to contact (related to astrology purpose).           7708805214 </p>
+      <p>I am Jayprakash, passionate about Tamil vedic astrology, KP system, Dasha-Bhukti, and Nakshatra-level analysis. This is a personal research portal to guide based on deep Jyotish knowledge. ❤️ feel free to contact (related to astrology purpose). 7708805214</p>
     </div>
 
-    <div class="link">
-      <h2>My Links</h2>
-      <p>🔗 <a href="https://jayaprakash3195.github.io/age-dasa/" target="_blank">Click here to visit dasa based on age </a></p>
-      <p>🔗 <a href="https://jayaprakash3195.github.io/laknadasaaa/" target="_blank">Click here to visit dasa based on lakna </a></p>
-      
-      <p>🔗 <a href="https://jayaprakash3195.github.io/vathai-vainasikam/" target="_blank">Click here to visit vathai vainasikam yoga natchathira </a></p>
+    <div class="tabs">
+      <div class="tab-button active" onclick="showTab(0)">கால புருஷ தசை</div>
+      <div class="tab-button" onclick="showTab(1)">விம்ஷோத்தரி 4+4</div>
+      <div class="tab-button" onclick="showTab(2)">நட்சத்திர யோகம்</div>
+    </div>
+
+    <div class="tab-content active">
+      <iframe src="https://jayaprakash3195.github.io/age-dasa/"></iframe>
+    </div>
+
+    <div class="tab-content">
+      <iframe src="https://jayaprakash3195.github.io/laknadasaaa/"></iframe>
+    </div>
+
+    <div class="tab-content">
+      <iframe src="https://jayaprakash3195.github.io/vathai-vainasikam/"></iframe>
     </div>
 
     <div class="form-block">
@@ -103,15 +166,26 @@
       </form>
       <p id="responseMsg" style="margin-top:15px; color: green;"></p>
     </div>
-  
+  </div>
+
   <script>
+    const tabs = document.querySelectorAll('.tab-button');
+    const contents = document.querySelectorAll('.tab-content');
+
+    function showTab(index) {
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+        contents[i].classList.toggle('active', i === index);
+      });
+    }
+
     document.getElementById("astroForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
       const form = event.target;
       const formData = new FormData(form);
 
-      const scriptURL = "https://script.google.com/macros/s/AKfycbzcOnscdiNCiuX-5xInzcCzwEWHiTOqMCrzFRnR7hVIcsUPjY4kMigv1avf_8yYd_uW/exec"; // Replace with your actual Web App URL
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzcOnscdiNCiuX-5xInzcCzwEWHiTOqMCrzFRnR7hVIcsUPjY4kMigv1avf_8yYd_uW/exec";
 
       fetch(scriptURL, {
         method: "POST",
@@ -128,6 +202,5 @@
       });
     });
   </script>
-
 </body>
 </html>
