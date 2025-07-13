@@ -103,45 +103,7 @@
       </form>
       <p id="responseMsg" style="margin-top:15px; color: green;"></p>
     </div>
-  </div>
-    <div id="ad-block" style="border: 1px solid #ccc; padding: 10px; max-width: 350px;">
-  Loading ad...
-</div>
-
-<script>
-  async function loadAdFromSheet() {
-    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQtuHejcw3_RV7egHYIDmjYuJcXBYZowsE3Z7Mz1MkeLmqQh0EzCAxbsO3wF4YX6nFv-ER1vmWBa-X1/gviz/tq?tqx=out:json';
-
-    try {
-      const response = await fetch(url);
-      const text = await response.text();
-      const json = JSON.parse(text.substr(47).slice(0, -2));
-
-      const row = json.table.rows[0].c;
-      const imageUrl = row[0]?.v;
-      const adText = row[1]?.v;
-      const adLink = row[2]?.v;
-
-      if (imageUrl && adText && adLink) {
-        document.getElementById("ad-block").innerHTML = `
-          <a href="${adLink}" target="_blank" style="text-decoration:none; color:inherit;">
-            <img src="${imageUrl}" alt="Ad Banner" style="width:100%; border-radius: 6px;">
-            <p style="font-size: 16px; font-weight: bold; text-align: center; margin-top: 10px;">${adText}</p>
-          </a>
-        `;
-      } else {
-        throw new Error("Sheet data missing or empty");
-      }
-    } catch (error) {
-      document.getElementById("ad-block").innerText = "❌ Failed to load ad.";
-      console.error("Ad Load Error:", error);
-    }
-  }
-
-  loadAdFromSheet();
-</script>
-
-
+  
   <script>
     document.getElementById("astroForm").addEventListener("submit", function(event) {
       event.preventDefault();
