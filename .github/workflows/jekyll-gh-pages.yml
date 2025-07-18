@@ -1,0 +1,6 @@
+title: JP's Astro Blog
+description: Welcome to my astrology research site!
+author: Jayprakash R
+baseurl: "" 
+url: "https://your-username.github.io"
+theme: minima
