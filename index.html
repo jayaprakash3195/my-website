@@ -6,115 +6,64 @@
   <title>JP's Astro Research</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       background: #f9f9f9;
       margin: 0;
       padding: 0;
     }
-
     header {
       background-color: #d4f4d2;
       padding: 20px;
       text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.09);
     }
-
     header h1 {
       color: #2d702d;
       margin: 0;
     }
-
     .container {
       padding: 20px;
-      max-width: 800px;
+      max-width: 850px;
       margin: auto;
     }
-
     .bio, .form-block {
-      background: #ffffff;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: #fff;
+      padding: 16px 22px;
+      margin-bottom: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.09);
     }
-
     .bio h2, .form-block h2 {
       margin-top: 0;
-      color: #2d702d;
+      color: #25611f;
     }
-
     input[type="text"], input[type="date"], input[type="time"], textarea {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      border: 1px solid #ccc;
+      border: 1px solid #b4b9bb;
       border-radius: 6px;
+      font-size: 1em;
     }
-
     button {
       background-color: #2d702d;
       color: white;
-      padding: 12px 20px;
+      padding: 12px 24px;
       border: none;
       border-radius: 6px;
+      font-size: 1em;
+      font-weight: bold;
       cursor: pointer;
+      margin-top: 10px;
     }
-
     button:hover {
       background-color: #205220;
     }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-      justify-content: center;
+    @media (max-width: 800px) {
+      .container { padding: 6px; }
     }
-
-    .tab-button {
-      flex: 1 1 30%;
-      text-align: center;
-      background: #e0f2f1;
-      border: 1px solid #2d702d;
-      padding: 10px;
-      margin: 2px;
-      cursor: pointer;
-      border-radius: 8px;
-      font-weight: bold;
-      color: #2d702d;
-    }
-
-    .tab-button.active {
-      background: #2d702d;
-      color: white;
-    }
-
-    .tab-content {
-      display: none;
-      background: #fff;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      border-radius: 10px;
-    }
-
-    @media (max-width: 768px) {
-      .tab-button {
-        flex: 1 1 100%;
-      }
-
-      iframe {
-        height: 500px;
-      }
+    @media (max-width: 600px) {
+      .bio, .form-block { padding-left:8px; padding-right:8px; }
     }
   </style>
 </head>
@@ -126,37 +75,24 @@
   <div class="container">
     <div class="bio">
       <h2>About JP</h2>
-      <p>I am Jayprakash, passionate about Tamil vedic astrology, KP system, Dasha-Bhukti, and Nakshatra-level analysis. This is a personal research portal to guide based on deep Jyotish knowledge. ❤️ feel free to contact (related to astrology purpose). 7708805214</p>
+      <p>
+        I am Jayprakash, passionate about Tamil vedic astrology, KP system, Dasha-Bhukti, and Nakshatra-level analysis. 
+        This is a personal research portal to guide based on deep Jyotish knowledge. ❤️ <br>
+        Feel free to contact (related to astrology purpose): <b>7708805214</b>
+      </p>
     </div>
 
-    <div class="tabs">
-      <div class="tab-button active" onclick="showTab(0)">கால புருஷ தசை</div>
-      <div class="tab-button" onclick="showTab(1)">நட்சத்திர யோகம்</div>
-    </div>
-
-    <div class="tab-content active">
-      <iframe src="https://jayaprakash3195.github.io/age-dasa/"></iframe>
-    </div>
-
-    <div class="tab-content">
-      <iframe src="https://jayaprakash3195.github.io/vathai-vainasikam/"></iframe>
-    </div> <br>
-
-    <div class="form-block"> <br>
+    <div class="form-block">
       <h2>Request Your Horoscope Reading</h2>
       <form id="astroForm">
         <label>Date of Birth:</label>
         <input type="date" name="dob" required>
-
         <label>Time of Birth:</label>
         <input type="time" name="tob" required>
-
         <label>Place of Birth:</label>
         <input type="text" name="pob" placeholder="City, State" required>
-
         <label>Your Question:</label>
         <textarea name="question" rows="4" placeholder="Enter your question here..." required></textarea>
-
         <button type="submit">Submit</button>
       </form>
       <p id="responseMsg" style="margin-top:15px; color: green;"></p>
@@ -164,16 +100,6 @@
   </div>
 
   <script>
-    const tabs = document.querySelectorAll('.tab-button');
-    const contents = document.querySelectorAll('.tab-content');
-
-    function showTab(index) {
-      tabs.forEach((tab, i) => {
-        tab.classList.toggle('active', i === index);
-        contents[i].classList.toggle('active', i === index);
-      });
-    }
-
     document.getElementById("astroForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
@@ -192,7 +118,6 @@
         form.reset();
       })
       .catch(error => {
-        console.error("Error!", error.message);
         document.getElementById("responseMsg").textContent = "❌ Something went wrong.";
       });
     });
